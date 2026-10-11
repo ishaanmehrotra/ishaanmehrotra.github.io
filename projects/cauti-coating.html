@@ -1,0 +1,135 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>A catheter coating designed around who pays for the infection — Ishaan Mehrotra</title>
+<meta name="description" content="A smart hydrogel catheter coating that releases a biofilm-degrading enzyme only on detecting bacteria, with the device spec, regulatory path and six-phase test plan derived from reimbursement and market constraints.">
+<meta name="theme-color" content="#0A1A45">
+<meta property="og:type" content="article">
+<meta property="og:title" content="A catheter coating designed around who pays for the infection — Ishaan Mehrotra">
+<meta property="og:description" content="A smart hydrogel catheter coating that releases a biofilm-degrading enzyme only on detecting bacteria, with the device spec, regulatory path and six-phase test plan derived from reimbursement and market constraints.">
+<meta property="og:image" content="../assets/img/card-cauti.jpg">
+<meta name="twitter:card" content="summary_large_image">
+<link rel="icon" href="../assets/favicon.svg">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Inter:wght@400;450;500;600;650&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../assets/style.css">
+</head>
+<body class="article">
+<a class="skip" href="#main">Skip to content</a>
+
+<header class="nav">
+  <div class="nav__brand"><a href="../index.html">Ishaan Mehrotra</a></div>
+  <nav aria-label="Sections">
+    <ul class="nav__links">
+      <li><a href="../index.html#about">About</a></li>
+      <li><a href="../index.html#experience">Experience</a></li>
+      <li><a href="../index.html#work">Work</a></li>
+      <li><a href="../index.html#skills">Skills</a></li>
+      <li><a href="../index.html#contact">Contact</a></li>
+    </ul>
+  </nav>
+  <a class="nav__cta" href="../resume/ishaan-mehrotra-resume.pdf">Resume</a>
+</header>
+
+<main id="main" class="page">
+  <p class="crumb"><a href="../index.html">Home</a> <span aria-hidden="true">/</span> <a href="../index.html#work">Featured work</a> <span aria-hidden="true">/</span> Catheter coating</p>
+
+  <p class="eyebrow">03 · Device strategy · Commercialization</p>
+  <h1>A catheter coating designed around who pays for the infection</h1>
+  <p class="lede">Catheter-associated urinary tract infections are about 30% of all healthcare-associated infections, and Medicare has not reimbursed the preventable ones since 2008. That rule decides who pays for prevention, so we started there and worked back to a specification, a regulatory path and a six-phase test plan. Nothing was built; every performance number here is a target.</p>
+
+  <dl class="glance">
+    <div><dt>Timeline</dt><dd>Sep – Dec 2024</dd></div>
+    <div><dt>Context</dt><dd>BME405L design, Duke</dd></div>
+    <div><dt>Team</dt><dd>5 students (Team Ubiqure)</dd></div>
+    <div><dt>My role</dt><dd>One of five. The proposal does not break out individual contributions</dd></div>
+    <div><dt>Methods</dt><dd>Market sizing, competitive benchmarking, SWOT, patent landscape, regulatory classification, test plan design</dd></div>
+    <div class="wide"><dt>Deliverable</dt><dd>A design proposal for a hydrogel catheter coating that releases a biofilm-degrading enzyme only when it detects the bacteria, with every design criterion set from a cited market or clinical number. Proposed, not built.</dd></div>
+  </dl>
+
+  <h2>The problem</h2>
+  <p>About 20% of hospitalized patients get a urinary catheter, and roughly 75% of hospital-acquired urinary tract infections are catheter-related. In nursing homes, where catheters stay in longer, half of catheterized residents develop a symptomatic infection. Direct mortality is low, but the downstream is not: these are the second leading cause of secondary bloodstream infections, the resulting bacteremias carry around 10% mortality, and pyelonephritis accounts for about 100,000 US hospitalizations a year.</p>
+  <p>The commercial shape of this problem is unusually clean, which is what made it interesting to work on. There are roughly 449,334 CAUTI cases a year in the US. Each costs a facility between $876 and $10,197. And because CMS stopped reimbursing preventable CAUTIs in 2008, that cost sits with the hospital rather than the payer. The urinary catheter market was $4.18 billion in 2022 and is projected to reach $6.32 billion by 2030, with specialty catheters growing fastest. A prevention device here does not need to be sold on altruism. It is a cost-avoidance purchase with a calculable payback, and the buyer is the person holding the bill.</p>
+
+  <h2>Why it is hard</h2>
+  <p>The specific enemy is <em>Proteus mirabilis</em>, the pathogen most directly tied to catheter use, and it is a genuinely nasty target. It secretes an adhesive polysaccharide and self-elongates, so it sticks to catheters easily. It triggers urease-induced stone formation and then shelters inside those stones from both antibiotics and the immune system. It carries mobile genetic elements that let it hand its resistance genes to other strains. It has developed resistance across most common antibiotic classes, and 3 of 35 characterized strains are pan-drug resistant.</p>
+  <p>We benchmarked what hospitals actually buy today, with prices and failure modes, because "the incumbents are bad" is not an argument until you can say how:</p>
+  <ul class="tight">
+    <li><strong>Silver-coated catheters, $15–25 per unit.</strong> Slow sustained release of silver ions, effective roughly 7 to 14 days, around 21% CAUTI reduction. Silver ion leakage brings hepatotoxicity and argyria-like effects, and the silver dressing literature recommends capping exposure at 30 days.</li>
+    <li><strong>Antibiotic-impregnated catheters, $20–30 per unit.</strong> Also 7 to 14 days, better reduction at around 65%. They also drive antimicrobial resistance in exactly the organism you least want to make more resistant, and they increase surface roughness, which patients feel on removal.</li>
+    <li><strong>Hydrogel-coated catheters, $10–15 per unit.</strong> Genuinely more comfortable, barely antimicrobial.</li>
+    <li><strong>Prevention protocols.</strong> Sterile insertion, early removal, bundled care. Around 53% reduction and entirely dependent on compliance. Observational work found physicians often do not review catheter necessity at all; fewer than 25% of US hospitals had any catheter monitoring system and fewer than 20% tracked duration or discontinuation.</li>
+  </ul>
+  <p>The pattern underneath all four is the same. Every existing approach either releases its payload constantly whether or not anything is there, or depends on a person remembering to do something. Constant release is what burns the coating out in two weeks and what breeds resistance. That framing is what produced the design, and finding it is the part of this project I would actually claim as thinking rather than research.</p>
+
+  <h2>The design: release only on detection</h2>
+  <p><em>P. mirabilis</em> coordinates before it attacks. It uses quorum sensing, releasing N-acyl homoserine lactones (AHLs) as signalling molecules, and when local concentration crosses a threshold those AHLs switch on the gene expression that turns it into a swarming, biofilm-forming problem. That molecule is both the trigger for virulence and a reliable announcement that bacteria have arrived.</p>
+  <p>So we designed the coating to listen for it. Aptamers selected against AHL are built into the hydrogel <em>as the crosslinks themselves</em>. In clean conditions the hydrogel is intact and inert. When AHL appears, it binds the aptamer, the crosslink breaks, the hydrogel dissolves locally, and it releases an enzyme embedded inside: the tail spike protein from the <em>Proteus</em> bacteriophage vB_PmiS_Pm-CJR, which degrades polygalacturonic acid. That attacks the biofilm two ways at once, because polygalacturonic acid is both a component of the bacterium's outer membrane lipopolysaccharide and part of how swarmer cells migrate.</p>
+  <p>Two mechanisms, one trigger. Quorum quenching removes the coordination signal, the depolymerase degrades the biofilm that has already started, and nothing is released until something is there to release it against.</p>
+
+  <figure>
+    <img src="../assets/img/cauti-mechanism.jpg" alt="Diagram showing aptamer-functionalized crosslinks joining polymer chains, then AHL binding the aptamer and breaking the crosslink, dissolving the hydrogel and releasing embedded depolymerase enzymes." loading="lazy">
+    <figcaption>The release mechanism. Aptamer-functionalized crosslinks hold the hydrogel together; AHL binding breaks them, dissolving the matrix locally and freeing the embedded depolymerase.</figcaption>
+  </figure>
+
+  <h2>Turning market facts into a specification</h2>
+  <p>This is the most transferable part of the project. Each design criterion is a number pulled from how the market actually fails, not from what was convenient to measure.</p>
+  <ul class="tight">
+    <li><strong>Sensitivity: aptamer–AHL dissociation constant between 10 pM and 10 nM, targeting the low end.</strong> Competitors do not need sensitivity because they leak constantly. We do, because nothing happens until binding happens. Published strong aptamer binding for small molecules sits in that range.</li>
+    <li><strong>Efficacy: reduce CAUTI by more than 85%.</strong> Set above the best existing option, antibiotic coatings at 65%, rather than above the average.</li>
+    <li><strong>Duration: more than four weeks.</strong> From clinical reality rather than ambition. Long-term catheters are changed every 4 to 12 weeks and short-term every 2 to 3, and we already knew compliance with removal timelines is poor. A coating that quits at two weeks fails the patients who are hardest to help. Aptamers regenerate after binding without losing affinity, and polyacrylamide hydrogels degrade slowly enough in vivo to stay intact for years, which is why we chose that matrix.</li>
+    <li><strong>Adhesion: at least 40 kPa</strong>, the published threshold for a hydrogel coating not shedding off a catheter during insertion.</li>
+    <li><strong>Safety: do not disrupt the healthy microbiome.</strong> The risk we flagged against ourselves is that <em>Lactobacilli</em>, which help prevent UTIs, run their own quorum quenching, so broad quenching could harm the organism you want to keep.</li>
+  </ul>
+
+  <h2>Testing and regulatory path</h2>
+  <p>We wrote a six-phase plan rather than a list of experiments, because this is a combination product and the sequencing is what makes it fundable.</p>
+
+  <figure class="wide">
+    <img src="../assets/img/cauti-phases.jpg" alt="Six-phase flowchart: aptamer selection and depolymerase verification, in-vitro testing, ex-vivo testing, in-vivo testing, safety and biocompatibility, and clinical trials, each with its method and readout." loading="lazy">
+    <figcaption>Each phase names its method and what counts as passing, from surface plasmon resonance for binding affinity through to a pig model chosen for urinary tract similarity.</figcaption>
+  </figure>
+
+  <p>Phase 1 verifies the two components separately: surface plasmon resonance for aptamer binding affinity with counterselection against other bacterial quorum molecules, and a minimum biofilm inhibitory concentration assay to confirm the depolymerase actually degrades biofilm. Phase 2 moves to the assembled coating on catheters using the Calgary Biofilm Device for high-throughput comparison against hydrogel-only, depolymerase-only and aptamer-free controls. Phase 3 is ex vivo in a flow chamber with urine and blood. Phase 4 is in vivo in a pig model, chosen because pig urinary anatomy is close to human. Phase 5 is cytotoxicity, hemocompatibility and cytokine release. Phase 6 is clinical: 80 volunteers for safety over about six months, 300 high-risk patients for efficacy over one to two years, then roughly 2,000 patients to confirm.</p>
+  <p>On the regulatory side we classified it as a Class III combination product requiring premarket approval with an IND, reviewed the patent landscape across USPTO, Google Patents and Espacenet, and identified the three closest prior-art patents to frame the novelty claim. No existing patent combines AHL-responsive aptamer crosslinks with phage-derived depolymerase release.</p>
+
+  <h2>What did not work, and what we never did</h2>
+  <p>Nothing was built. This is a design proposal, and I want that stated plainly because a page full of specifications can read like a product. No aptamer was selected, no hydrogel was formulated, no coating was tested on a catheter. Every performance number above is a target we set, not a result we measured.</p>
+  <p>There is also a risk we named and then walked past. AHL concentration varies between patients, which we listed as a threat in the SWOT and did not resolve. A detection-triggered device whose trigger concentration varies by patient has a dosing problem hiding inside it, and that deserved its own phase in the test plan rather than a bullet point. If I were defending this proposal to an investor, that is the question I would expect first and the one we were least ready for.</p>
+
+  <h2>What I learned</h2>
+  <p>I use the structure of this project constantly and it has very little to do with catheters. The sequence was: find where the money actually lands, which here is the hospital rather than the payer. Find the shared failure mode across every incumbent, which here is constant release or dependence on human compliance. Design against that failure mode rather than against the competitor's feature list. Then set every specification at a number you can defend from a citation.</p>
+  <p>It is the same move I use on diligence now. The interesting question about a company is rarely whether the technology works. It is who carries the cost today, whether that person can sign, and what the incumbents all get wrong for the same structural reason.</p>
+
+  <h2>What I would do next</h2>
+  <ul class="tight">
+    <li><strong>Resolve the patient-variability question before anything else.</strong> Measure the AHL concentration distribution across real catheterized patients. If the spread is wide, the whole detection-triggered premise needs a threshold strategy rather than a single Kd target.</li>
+    <li><strong>Cost the coating.</strong> We priced every competitor and never priced ourselves. At $15 to $30 per unit for incumbents, the manufacturing cost of an aptamer-functionalized hydrogel with an embedded phage protein is the number that decides whether this is a business.</li>
+    <li><strong>Run Phase 1 only.</strong> Aptamer binding by SPR and depolymerase activity by MBIC assay are cheap relative to everything downstream and they kill the project fast if either component does not hold up.</li>
+    <li><strong>Talk to infection control committees.</strong> We mapped them as a stakeholder and never interviewed one. They decide formulary for exactly this category.</li>
+  </ul>
+
+  <h2>Skills</h2>
+  <ul class="tags">
+    <li>Market Sizing</li><li>Reimbursement Analysis</li><li>Competitive Benchmarking</li><li>Requirements Definition</li><li>Regulatory Strategy</li><li>Patent Landscape Review</li><li>Biomaterials</li><li>Test Plan Design</li><li>Stakeholder Mapping</li>
+  </ul>
+
+  <div class="btnrow">
+    <a class="btn btn--solid" href="../docs/cauti-catheter-coating-proposal.pdf">Full design proposal (PDF)</a>
+    <a class="btn" href="../docs/cauti-catheter-coating-pitch.pdf">Pitch deck (PDF)</a>
+  </div>
+
+  <div class="sourcenote">
+    <strong>Source:</strong> "Aptamer-Functionalized Hydrogel Catheter Coating with Embedded Depolymerase to Prevent Catheter Associated Urinary Tract Infections," Duke BME405L, December 2024. Shared sequence links were removed from the public copy.
+  </div>
+
+  <nav class="pagenav" aria-label="More case studies">
+    <a href="protein-language-models.html">&#8592; Previous: protein language models</a>
+    <a href="p53-binders.html">Next: p53 peptide binders &#8594;</a>
+  </nav>
+</main>
+</body>
+</html>

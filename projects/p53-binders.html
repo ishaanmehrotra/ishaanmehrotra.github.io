@@ -1,0 +1,127 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>An AI-designed peptide that did not bind — Ishaan Mehrotra</title>
+<meta name="description" content="A language model generated 200 candidate peptides for p53, a famously undruggable target. We synthesized the best one, tested it by ELISA, and reported that the binding did not reach significance.">
+<meta name="theme-color" content="#0A1A45">
+<meta property="og:type" content="article">
+<meta property="og:title" content="An AI-designed peptide that did not bind — Ishaan Mehrotra">
+<meta property="og:description" content="A language model generated 200 candidate peptides for p53, a famously undruggable target. We synthesized the best one, tested it by ELISA, and reported that the binding did not reach significance.">
+<meta property="og:image" content="../assets/img/card-p53.jpg">
+<meta name="twitter:card" content="summary_large_image">
+<link rel="icon" href="../assets/favicon.svg">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Inter:wght@400;450;500;600;650&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../assets/style.css">
+</head>
+<body class="article">
+<a class="skip" href="#main">Skip to content</a>
+
+<header class="nav">
+  <div class="nav__brand"><a href="../index.html">Ishaan Mehrotra</a></div>
+  <nav aria-label="Sections">
+    <ul class="nav__links">
+      <li><a href="../index.html#about">About</a></li>
+      <li><a href="../index.html#experience">Experience</a></li>
+      <li><a href="../index.html#work">Work</a></li>
+      <li><a href="../index.html#skills">Skills</a></li>
+      <li><a href="../index.html#contact">Contact</a></li>
+    </ul>
+  </nav>
+  <a class="nav__cta" href="../resume/ishaan-mehrotra-resume.pdf">Resume</a>
+</header>
+
+<main id="main" class="page">
+  <p class="crumb"><a href="../index.html">Home</a> <span aria-hidden="true">/</span> <a href="../index.html#work">Featured work</a> <span aria-hidden="true">/</span> p53 peptide binders</p>
+
+  <p class="eyebrow">04 · AI to wet lab</p>
+  <h1>An AI-designed peptide that did not bind</h1>
+  <p class="lede">p53 is the most frequently mutated gene in human cancer and one of the hardest to drug, because it has no stable structure to design against. A sequence model gave us 200 candidate peptides. We synthesized the top one and tested it against real p53. It did not bind significantly, and the abstract says so.</p>
+
+  <dl class="glance">
+    <div><dt>Timeline</dt><dd>Jan – May 2025</dd></div>
+    <div><dt>Context</dt><dd>Duke BME305L with the Chatterjee Lab</dd></div>
+    <div><dt>Team</dt><dd>8 authors, 4 marked equal contributors</dd></div>
+    <div><dt>My role</dt><dd>Co-first author. Purification, biotinylation, ELISA, figures, conclusions</dd></div>
+    <div><dt>Tools</dt><dd>PepMLM, AlphaFold3, E. coli expression, Ni-NTA purification, ELISA, t-test</dd></div>
+    <div class="wide"><dt>Headline outcome</dt><dd>K<sub>d</sub> of 0.39 nM against p53 versus 0.62 nM against the PBS control, but t = −0.18 and p = 0.43. Not significant. BSA, included as a blocking agent, bound more strongly than the designed peptide at several concentrations.</dd></div>
+  </dl>
+
+  <h2>The problem</h2>
+  <p>p53 is the tumour suppressor everyone wants and nobody can reach. The TP53 gene is the most frequently mutated gene in human cancers, roughly 80% of the disease-causing mutations are missense mutations in a single structural domain, and restoring or modulating its function has been a target since before I was born.</p>
+  <p>The reason it has stayed undruggable is structural, or rather the lack of structure. Most small-molecule and structure-based design methods need a stable, well-defined binding pocket to aim at. p53 is intrinsically disordered: it does not hold a fixed shape, so there is no pocket to dock into. The standard toolkit does not have a move here.</p>
+
+  <h2>Why it is hard</h2>
+  <p>Sequence-based deep learning offers a way around this precisely because it never needs a structure in the first place. <strong>PepMLM</strong> treats binder design as masked language modeling over sequence: you give it the target protein with a masked region at the C-terminus and it fills in candidate binders, ranked by its own confidence.</p>
+  <p>That is elegant, and it moves the hard part rather than removing it. A sequence model will happily produce 200 confident-looking peptides whether or not any of them bind. The model's ranking is pseudo-perplexity, which measures how plausible the model finds its own output, not how tightly the peptide will stick to anything. Every bit of the real evidence has to come from the bench, and the bench is slow, so you get a small number of shots.</p>
+
+  <h2>What we did</h2>
+
+  <figure>
+    <img src="../assets/img/p53-workflow.jpg" alt="Workflow diagram: the p53 target sequence goes into PepMLM, generated binders are introduced into a plasmid, expressed and purified in bacteria, then tested for binding to p53 in a microplate assay." loading="lazy">
+    <figcaption>From a sequence in a language model to a purified peptide in a 96-well plate. Each arrow is a place the result can quietly die.</figcaption>
+  </figure>
+
+  <p>We generated 200 candidate 12-amino-acid peptides and ranked them by pseudo-perplexity. The top three were SDEPLLGGMPRT (7.70), SDTPLYLSGCPT (8.54) and GDYYPLSGCLGT (8.90). We took the lowest-perplexity candidate forward.</p>
+  <p>Before committing to the bench we ran the binder, p53, and the proposed complex through AlphaFold3. This is where the first honest warning showed up. The predicted structures of the binder alone and p53 alone were reasonable. The predicted complex came back with an <strong>ipTM of 0.22</strong>, which is low confidence in the interaction. We noted it and proceeded, on the grounds that AlphaFold is known to struggle with intrinsically disordered targets, so a low score on a disordered protein is weak evidence rather than a verdict.</p>
+
+  <figure>
+    <img src="../assets/img/p53-structures.jpg" alt="Three AlphaFold3 predicted structures: the candidate binder as a compact helix, p53 as a mostly disordered extended chain, and the predicted binder and p53 interaction." loading="lazy">
+    <figcaption>The binder folds confidently, p53 is mostly disordered, which is the whole problem, and the predicted interaction between them scored an ipTM of 0.22.</figcaption>
+  </figure>
+
+  <p>Then the wet lab. The peptide was expressed as a SUMO-tagged fusion protein in E. coli BL21(DE3), purified by nickel affinity chromatography, and biotinylated with Sulfo-NHS-LC-Biotin for detection. The assay was an ELISA with the binder serially diluted across eight concentrations, run in triplicate, against immobilized p53 and against a PBS negative control, detected with HRP-conjugated streptavidin and TMB substrate.</p>
+
+  <h2>What I did</h2>
+  <p>The contribution statement in the manuscript is specific, which I appreciate more now than I did at the time. I purified and biotinylated the binders with Brandon Lu, prepared the ELISA with Alex Ivan, built the figure set with Brandon, and finalized the results and conclusions with Brandon, Alex and Shivam Singh. Lauren Hong, Tian Zi Wang and Sophia Vincoff built constructs, ran transfections and collected binders. Dr. Pranam Chatterjee conceived and supervised the study.</p>
+  <p>So the purification, the assay setup and the interpretation are mine to speak to. The model itself is the lab's work, not mine.</p>
+
+  <h2>Results</h2>
+  <p>The binder gave a dissociation constant of <strong>0.39 nM against p53</strong>, against <strong>0.62 nM for the PBS control</strong>. On its face that is tighter binding to the target, which is what you want, and at sub-nanomolar it looks like a strong result.</p>
+  <p>Then we ran the statistics. A one-tailed paired t-test across the concentration series gave <strong>t = −0.18 and p = 0.43</strong>. The difference between target and control is not significant at any reasonable threshold. We had a number that looked like a result and was not one.</p>
+  <p>A second finding made it worse and more useful. Bovine serum albumin had been included as a blocking agent and an incidental negative control. At several concentrations, <strong>BSA bound the plate more strongly than our designed peptide did</strong>, which is a direct signal that nonspecific binding was dominating the assay.</p>
+
+  <blockquote class="pull">
+    <p>A K<sub>d</sub> of 0.39 nM reads like success until you run the test that asks whether it differs from nothing.</p>
+  </blockquote>
+
+  <h2>What did not work</h2>
+  <p>The whole thing, in the sense that matters. We did not demonstrate that a PepMLM-designed peptide binds p53. The three specific failures:</p>
+  <ul class="tight">
+    <li><strong>The control was wrong.</strong> PBS and a blocking agent are not the right negative control for a 12-mer peptide. The right control is a scrambled or size-matched peptide with similar physicochemical properties, so the only variable is the designed sequence. We wrote that into the paper as the fix.</li>
+    <li><strong>n was too small to say much either way.</strong> Three independent replicates across eight concentrations, and a t-statistic of −0.18 does not just fail to reach significance, it sits almost exactly on no difference. We cannot distinguish "this peptide does not bind" from "this assay could not have detected it."</li>
+    <li><strong>The Western-style confirmation never happened.</strong> We had one orthogonal readout and it was the one that failed. A second method would have told us whether the problem was the peptide or the plate.</li>
+  </ul>
+
+  <h2>What I learned</h2>
+  <p><strong>Control choice is the experiment.</strong> I picked PBS because it was there and because it is what a protocol says to use. The right question, which I now ask first on any comparison, is what exactly differs between arm A and arm B, and whether that difference is the thing I claim to be testing. Here it was not: the difference between my peptide and PBS includes "is a peptide at all."</p>
+  <p><strong>Notice when your reason for dismissing a bad signal is conveniently shaped.</strong> The ipTM of 0.22 was the pipeline telling us something. Our justification for continuing was not wrong, AlphaFold genuinely is unreliable on disordered proteins, but it was also precisely the argument we needed to hear in order to keep going. That coincidence is a flag, and I try to catch it now.</p>
+  <p><strong>The honest write-up is worth more than the result would have been.</strong> A positive result here would have been one data point in a crowded field. A clearly reported null, with the confound named and the assay redesign specified, means the next person does not repeat the same control mistake. The paper puts the non-significance in the abstract rather than burying it in limitations, and I would write it that way again.</p>
+
+  <h2>What I would do next</h2>
+  <ul class="tight">
+    <li><strong>Rerun with a scrambled-sequence control</strong> matched for length, charge and hydrophobicity, plus an unrelated peptide of the same size. That one change decides whether there is anything here.</li>
+    <li><strong>Add an orthogonal method.</strong> Surface plasmon resonance gives kinetics rather than an endpoint and does not depend on plate chemistry, so it fails differently from an ELISA.</li>
+    <li><strong>Test more than one candidate.</strong> We took the single lowest-perplexity peptide. Testing the top five would tell us whether pseudo-perplexity ranks binding at all, which is the more interesting question than whether one peptide works.</li>
+    <li><strong>Treat the ipTM as a filter, not a footnote.</strong> If low ipTM predicts non-binding across a batch, that is a cheap pre-bench screen worth having.</li>
+  </ul>
+
+  <h2>Skills</h2>
+  <ul class="tags">
+    <li>Protein Expression and Purification</li><li>Nickel Affinity Chromatography</li><li>Biotinylation</li><li>ELISA Design</li><li>Statistical Testing</li><li>AlphaFold3</li><li>Scientific Figures</li><li>Negative-Result Reporting</li>
+  </ul>
+
+  <div class="sourcenote">
+    <strong>Source:</strong> "Design of p53-Targeting Peptides Using Language Model-Based Sequence Generation," Duke BME305L with the Programmable Biology Group, Spring 2025. Unpublished lab work, so the full PDF is available on request while I confirm sharing with the principal investigator.
+  </div>
+
+  <nav class="pagenav" aria-label="More case studies">
+    <a href="cauti-coating.html">&#8592; Previous: catheter coating</a>
+    <a href="handheld-device.html">Next: handheld device &#8594;</a>
+  </nav>
+</main>
+</body>
+</html>

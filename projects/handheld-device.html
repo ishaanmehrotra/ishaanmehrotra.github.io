@@ -1,0 +1,144 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>A handheld device, built alone and tested against 22 specs — Ishaan Mehrotra</title>
+<meta name="description" content="Solo hardware project: requirements through schematic, PCB, CAD enclosure and firmware, then tested against all 22 written specifications with every pass and every failure published.">
+<meta name="theme-color" content="#0A1A45">
+<meta property="og:type" content="article">
+<meta property="og:title" content="A handheld device, built alone and tested against 22 specs — Ishaan Mehrotra">
+<meta property="og:description" content="Solo hardware project: requirements through schematic, PCB, CAD enclosure and firmware, then tested against all 22 written specifications with every pass and every failure published.">
+<meta property="og:image" content="../assets/img/card-device.jpg">
+<meta name="twitter:card" content="summary_large_image">
+<link rel="icon" href="../assets/favicon.svg">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Inter:wght@400;450;500;600;650&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../assets/style.css">
+</head>
+<body class="article">
+<a class="skip" href="#main">Skip to content</a>
+
+<header class="nav">
+  <div class="nav__brand"><a href="../index.html">Ishaan Mehrotra</a></div>
+  <nav aria-label="Sections">
+    <ul class="nav__links">
+      <li><a href="../index.html#about">About</a></li>
+      <li><a href="../index.html#experience">Experience</a></li>
+      <li><a href="../index.html#work">Work</a></li>
+      <li><a href="../index.html#skills">Skills</a></li>
+      <li><a href="../index.html#contact">Contact</a></li>
+    </ul>
+  </nav>
+  <a class="nav__cta" href="../resume/ishaan-mehrotra-resume.pdf">Resume</a>
+</header>
+
+<main id="main" class="page">
+  <p class="crumb"><a href="../index.html">Home</a> <span aria-hidden="true">/</span> <a href="../index.html#work">Featured work</a> <span aria-hidden="true">/</span> Handheld device</p>
+
+  <p class="eyebrow">05 · Hardware · Solo build</p>
+  <h1>A handheld device, built alone and tested against 22 specs</h1>
+  <p class="lede">I did the requirements, schematic, PCB layout, enclosure, firmware and assembly myself, then tested the finished device against the 22 requirements I had written before building it. Six failed. They are all listed on this page.</p>
+
+  <dl class="glance">
+    <div><dt>Timeline</dt><dd>Sep 2023</dd></div>
+    <div><dt>Context</dt><dd>BME290L Medical Technology Prototyping, Duke</dd></div>
+    <div><dt>Team</dt><dd>Solo. Every decision has one owner</dd></div>
+    <div><dt>My role</dt><dd>Sole author. Requirements, ECAD, CAD, firmware, assembly, testing</dd></div>
+    <div><dt>Tools</dt><dd>KiCad, Fusion CAD, 3D printing, Arduino / embedded C, multimeter and oscilloscope testing</dd></div>
+    <div class="wide"><dt>Headline outcome</dt><dd>16 of 22 specifications passed. 6 failed: two enclosure, four electronics. Every failure is published with a root-cause diagnosis.</dd></div>
+  </dl>
+
+  <h2>The brief</h2>
+  <p>Take a battery-powered handheld electronics device from nothing to a working physical object. Write the requirements, design the circuit, lay out the board, design and print an enclosure around it, write the firmware, assemble it, then prove whether it does what you said it would. The device runs two timing modes driven by potentiometers: an astable mode that blinks an LED at an adjustable rate, and a monostable one-shot triggered by a button press.</p>
+  <p>The engineering content is ordinary. What makes it the project I am proudest of is that there was nobody to split it with, so every decision and every failure has exactly one owner, and I could not quietly redefine success at the end.</p>
+
+  <h2>Why it is hard</h2>
+  <p>Not technically hard. Honestly hard. The difficulty in a solo build-and-test project is entirely about whether you write requirements you can fail.</p>
+  <p>"Durable" is not a requirement. "Survives a drop from 6 feet without fatal stress concentrations" is. "Easy to use" is not a requirement. "The potentiometer knobs can be operated with the second hand while the device is held in the first" is. The second kind can come back negative, which is the point, and writing them before you know whether your design will pass is a small act of self-sabotage that makes the whole exercise mean something.</p>
+
+  <h2>What I did</h2>
+  <p>I wrote 16 enclosure requirements and 6 electronics requirements before designing anything, each phrased as something testable. They cover the obvious ergonomics (held in one hand, buttons reachable while holding it, stable on a flat surface, simple battery replacement) and then the ones that come from having used badly made hardware: prevent accidental power-off during use, keep test pads accessible without removing the board, route and secure wires internally, no fatal stress concentrations when dropped from 6 feet.</p>
+  <p>Then: functional decomposition, schematic capture and PCB layout in KiCad, a 22-line bill of materials with footprints and quantities, and mechanical design in CAD with an exploded assembly, orthographic drawings for base, cover and flap, and tolerances for the board mounts and potentiometer knobs.</p>
+
+  <div class="figrow">
+    <figure>
+      <img src="../assets/img/device-exploded.jpg" alt="Exploded 3D CAD assembly showing the enclosure cover with a window, a flap, the green circuit board, and the base, in two orientations." loading="lazy">
+      <figcaption>Cover, flap, board and base, with mounting positions and clearances resolved in CAD before anything was printed.</figcaption>
+    </figure>
+    <figure>
+      <img src="../assets/img/device-pcb.jpg" alt="KiCad PCB layout drawing showing copper traces, pads and component footprints inside a titled drawing frame." loading="lazy">
+      <figcaption>The PCB layout, routed to keep the test pads reachable with the board still mounted, which was one of the written requirements.</figcaption>
+    </figure>
+  </div>
+
+  <p>Then firmware. An interrupt service routine on the button pin rather than polling, two analog reads for the potentiometers mapped to blink frequency and one-shot duration, and serial output for debugging. I left the sleep-mode calls in the source but commented out, with a note explaining the dependency, rather than deleting them and pretending I had not considered power management.</p>
+  <p>I also noted in the code that my one-shot implementation was poor: it jitters by twice the blink delay because I built it from delays instead of a hardware timer. That comment is still in the firmware. It is the correct diagnosis, I did not have time to fix it, and writing it down is more useful than hiding it.</p>
+
+  <div class="figrow">
+    <figure>
+      <img src="../assets/img/device-photos.jpg" alt="The finished black 3D-printed enclosure photographed from above, showing the open battery compartment, power switch, push button, two potentiometer knobs and an LED, with the name Ishaan embossed on the case." loading="lazy">
+      <figcaption>The assembled device. Battery compartment, power switch and both potentiometer knobs reachable while the unit is held in one hand.</figcaption>
+    </figure>
+    <figure>
+      <img src="../assets/img/device-open.jpg" alt="The enclosure opened, showing the populated circuit board inside with colored wires routed to the panel-mounted components." loading="lazy">
+      <figcaption>Opened up. The wiring between the panel components and the board is what failed testing, and you can see why: the connection pins are short.</figcaption>
+    </figure>
+  </div>
+
+  <h2>Results</h2>
+  <p>Every requirement got an explicit testing strategy written before the test, then a PASSED or FAILED. Fourteen of the sixteen enclosure requirements passed, including the ergonomics, the battery access, the accessible test pads, the secure board mounting and the no-accidental-power-off design. Two of six electronics requirements passed: power activation and the presence and function of both potentiometers as hardware.</p>
+  <p>I also measured power consumption and battery life, logged the raw potentiometer voltage data, and wrote up a comparison of building this with discrete electronics against a microcontroller, which is the design question sitting underneath the whole project.</p>
+
+  <h2>What did not work</h2>
+  <div class="callout">
+    <h3>The six failures, with causes</h3>
+    <ul class="tight">
+      <li><strong>Internal wire retention — FAILED.</strong> The wires connecting the push button and power switch to the board kept coming undone. Cause: the connection pins on the PCB were too short to hold them. Fix: longer pins.</li>
+      <li><strong>6-foot drop — FAILED.</strong> The board stayed safe and every component stayed in position, which is what the mounting design was for. But the cover separated from the base. The enclosure protected the electronics and failed to protect itself.</li>
+      <li><strong>Blink trigger — FAILED.</strong> Pressing the button did not reliably start the monostable output.</li>
+      <li><strong>Blink pattern — FAILED.</strong> The LED did not blink in the specified pattern on press.</li>
+      <li><strong>Frequency control, 5 to 10 Hz — FAILED.</strong> The astable potentiometer did not move the blink rate across the specified range.</li>
+      <li><strong>Duration control, 3 to 10 seconds — FAILED.</strong> Same on the monostable side.</li>
+    </ul>
+  </div>
+  <p>Four of six electronics requirements failed, so I went looking for why rather than stopping at the result. My written diagnosis names three candidates: a wiring error somewhere in the circuit connections despite the board itself functioning, the fact that my board carried only one LED instead of the two the design assumed, and probable component damage in the potentiometers, which had been reused from the previous semester and had been through a lot.</p>
+
+  <blockquote class="pull">
+    <p>The enclosure protected the board through a 6-foot drop and then fell apart itself. That is a real result about where I spent my attention.</p>
+  </blockquote>
+
+  <h2>What I learned</h2>
+  <p>Writing the specification before building is the entire discipline. Once "adjustable between 5 and 10 Hz" is written down, there is no version of the project where I get to call a vaguely blinking LED a success. The specification is a commitment made by a past version of you who had no stake in the outcome, and it is the only honest grader available.</p>
+  <p>The second thing is that failure diagnosis is worth more than failure avoidance. Four electronics specs failed and the report is more useful than it would have been if they had passed, because the root causes are specific: pin length, LED count, degraded components. Somebody could pick this up and fix it. "It worked" teaches nobody anything.</p>
+  <p>I think about this most when scoping software deployments now. The question "what would make us say this failed" has to be answered before launch, by someone who does not yet know whether it will.</p>
+
+  <h2>What I would do next</h2>
+  <ul class="tight">
+    <li><strong>Fix the one-shot with a hardware timer.</strong> I diagnosed the jitter correctly in the code comments and never implemented the fix. That is the first thing.</li>
+    <li><strong>Longer connection pins and strain relief.</strong> The wire retention failure is the cheapest of the six to fix and the most likely to recur in any revision.</li>
+    <li><strong>Mechanical latch on the cover.</strong> Friction fit survived handling and not a drop. A latch or a screw boss turns a FAILED into a PASSED for a few grams.</li>
+    <li><strong>Swap in known-good potentiometers and retest before touching the circuit.</strong> If degraded components explain the frequency and duration failures, that is a ten-minute test that saves a redesign. I should have run it before writing three hypotheses.</li>
+  </ul>
+
+  <h2>Skills</h2>
+  <ul class="tags">
+    <li>Requirements Engineering</li><li>KiCad Schematic Capture</li><li>PCB Layout</li><li>Bill of Materials</li><li>CAD and Mechanical Drawings</li><li>3D Printing</li><li>Embedded C / Arduino</li><li>Interrupt Handling</li><li>Test Plan Execution</li><li>Root-Cause Analysis</li>
+  </ul>
+
+  <div class="btnrow">
+    <a class="btn btn--solid" href="../docs/handheld-device-technical-report.pdf">Full technical report (PDF, 36 pages)</a>
+  </div>
+
+  <div class="sourcenote">
+    <strong>Source:</strong> "Final Technical Report," Duke BME290L Medical Technology Prototyping Skills, September 2023. Sole author. The PDF has the full schematic, PCB layout, bill of materials, all mechanical drawings, the complete firmware listing, and the test results exactly as reported.
+  </div>
+
+  <nav class="pagenav" aria-label="More case studies">
+    <a href="p53-binders.html">&#8592; Previous: p53 peptide binders</a>
+    <a href="pkpd-modeling.html">Next: pharmacokinetic modeling &#8594;</a>
+  </nav>
+</main>
+</body>
+</html>

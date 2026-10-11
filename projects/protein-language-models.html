@@ -1,0 +1,148 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>A tiny protein model that matched a much bigger one — Ishaan Mehrotra</title>
+<meta name="description" content="Training a protein language model 10,000 times smaller than its baseline in three A100 hours, and the evaluation suite that exposed a tradeoff the headline metric was hiding.">
+<meta name="theme-color" content="#0A1A45">
+<meta property="og:type" content="article">
+<meta property="og:title" content="A tiny protein model that matched a much bigger one — Ishaan Mehrotra">
+<meta property="og:description" content="Training a protein language model 10,000 times smaller than its baseline in three A100 hours, and the evaluation suite that exposed a tradeoff the headline metric was hiding.">
+<meta property="og:image" content="../assets/img/card-plm.jpg">
+<meta name="twitter:card" content="summary_large_image">
+<link rel="icon" href="../assets/favicon.svg">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Inter:wght@400;450;500;600;650&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../assets/style.css">
+</head>
+<body class="article">
+<a class="skip" href="#main">Skip to content</a>
+
+<header class="nav">
+  <div class="nav__brand"><a href="../index.html">Ishaan Mehrotra</a></div>
+  <nav aria-label="Sections">
+    <ul class="nav__links">
+      <li><a href="../index.html#about">About</a></li>
+      <li><a href="../index.html#experience">Experience</a></li>
+      <li><a href="../index.html#work">Work</a></li>
+      <li><a href="../index.html#skills">Skills</a></li>
+      <li><a href="../index.html#contact">Contact</a></li>
+    </ul>
+  </nav>
+  <a class="nav__cta" href="../resume/ishaan-mehrotra-resume.pdf">Resume</a>
+</header>
+
+<main id="main" class="page">
+  <p class="crumb"><a href="../index.html">Home</a> <span aria-hidden="true">/</span> <a href="../index.html#work">Featured work</a> <span aria-hidden="true">/</span> Protein language models</p>
+
+  <p class="eyebrow">02 · Applied AI · Evaluation</p>
+  <h1>A tiny protein model that matched a much bigger one</h1>
+  <p class="lede">Two projects from Duke&#8217;s AI in Biomedical Engineering course. In the first we trained a very small protein language model and it matched a baseline about ten thousand times its size. In the second, fine-tuning made the headline metric worse and the thing we actually wanted better. The second result is the one I still think about.</p>
+
+  <dl class="glance">
+    <div><dt>Timeline</dt><dd>Jan – May 2025</dd></div>
+    <div><dt>Context</dt><dd>BME590 AI in BME, Duke</dd></div>
+    <div><dt>Team</dt><dd>9 authors across four papers</dd></div>
+    <div><dt>My focus</dt><dd>Evaluation suite and ESM-2 fine-tuning</dd></div>
+    <div><dt>Tools</dt><dd>PyTorch, HuggingFace, Mistral, ESM-2, AlphaFold scoring, UniRef50, 1× A100</dd></div>
+    <div class="wide"><dt>Headline outcome</dt><dd>ProtMistral-Tiny scored a pLDDT of 47.15 against ProGen2-Small's 47.65 while being about 10,000× smaller, trained in 3 GPU hours. Separately, dense-label fine-tuning dropped thermostability R² from 0.41 to 0.28 while lifting top-3 sampled pLDDT from 48 to 79.</dd></div>
+  </dl>
+
+  <h2>The problem</h2>
+  <p>Protein language models follow the same logic as text models: more parameters, more compute, better generations. ProtGPT2 has 774 million parameters. ProGen2-Small has 151 million. Both are real tools and both are expensive to train and to run.</p>
+  <p>The question we wanted to ask was not whether we could beat them, because we could not. It was how much of their competence comes from scale and how much comes from the structure of protein sequence data itself. That matters practically: if a small model gets most of the way there, a lab without a GPU cluster can iterate on protein design rather than waiting in a queue.</p>
+
+  <h2>Why it is hard</h2>
+  <p>Evaluating a generative protein model is genuinely awkward. You cannot just check accuracy, because there is no single right answer for "generate a protein." The field leans on structural scores, folding the generated sequence and asking whether the prediction is confident, which is a proxy for whether the sequence is physically plausible.</p>
+  <p>The failure mode that proxy hides is memorization. A model can score beautifully by reproducing common motifs it saw in training, which is not design, it is recall. So structure alone is not enough. You need diversity measured alongside it, and you need both at the sampling settings people actually use rather than at the single most-likely output.</p>
+
+  <h2>What we built</h2>
+  <p><strong>ProtMistral-Tiny</strong> is a Mistral-architecture autoregressive model with 15,000 parameters, trained from scratch on a filtered subset of UniRef50 with residue-level tokenization.</p>
+  <p>The architecture choices were all in service of a very small compute budget without crippling the model on long proteins. Sliding window attention keeps token complexity linear rather than quadratic, which combined with the tiny parameter count left most of the GPU memory free for data, so we could train on large proteins instead of filtering them out. We dropped sequences over 10,000 amino acids, which removed 2,790 out of 59 million training sequences. Grouped query attention recycles a deeper model out of fewer parameters.</p>
+  <p>Total training: <strong>a single A100 for three hours.</strong></p>
+
+  <figure>
+    <img src="../assets/img/plm-architecture.jpg" alt="Diagram of the ProtMistral-Tiny architecture showing token embeddings, rope encoding, grouped sliding-window self-attention, RMS norm layers, an MLP, and a softmax over residues." loading="lazy">
+    <figcaption>Grouped query attention and a sliding attention window were the two choices that made a three-hour training run possible without giving up long sequences.</figcaption>
+  </figure>
+
+  <h2>Results</h2>
+  <p>We benchmarked generated sequences by folding them and scoring structure, on a sample of 200 proteins at a maximum length of 100.</p>
+
+  <figure>
+    <img src="../assets/img/plm-results.jpg" alt="Training and validation loss curve over ten epochs, and a table of structure metrics: ProtGPT2 pLDDT 66.07, ProGen2-Small 47.65, ProtMistral-Tiny 47.15." loading="lazy">
+    <figcaption>ProtMistral-Tiny scored a pLDDT of 47.15 against ProGen2-Small's 47.65, with comparable pTM and pAE, at roughly 1/10,000th the parameter count. ProtGPT2, at 774 million parameters, was clearly ahead at 66.07, and we say so.</figcaption>
+  </figure>
+
+  <p>Matching ProGen2-Small on structural plausibility is the headline. The sequence diversity numbers are where it got strange.</p>
+
+  <figure>
+    <img src="../assets/img/plm-diversity.jpg" alt="Table of sequence diversity metrics: Shannon entropy 15.17 for ProtGPT2, 26.50 for ProGen2-Small, 8.05 for ProtMistral-Tiny; edit distance 51.41, 84.48, 78.96; Jaccard similarity 0.0081, 0.0109, 0.0077." loading="lazy">
+    <figcaption>Locally conservative, globally diverse: Shannon entropy 8.05, the lowest of the three, with edit distance 78.96 close to ProGen2-Small's 84.48 and the lowest k-mer overlap of any model.</figcaption>
+  </figure>
+
+  <p>Low local diversity with high global diversity is an unusual combination. It means the model is not memorizing motifs and replaying them, and it is also not improvising wildly at each position. Our reading was that limited capacity forces something close to a Markov process: the model lays the next stretch of track in front of itself without planning far ahead. The generated proteins were smaller than the sliding window and shared tokenization with ProGen2, so neither a locality bonus nor the tokenizer explains the structural scores. Something about the Mistral architecture's data efficiency does.</p>
+
+  <h2>The second project, and why it matters more</h2>
+  <p>In the final project we went the other direction: take ESM-2, an established model, and fine-tune it with <strong>dense distribution labels</strong> from deep mutational scanning data instead of the usual one-hot targets. The intuition is that a real protein position is not "this one amino acid is correct and all others equally wrong." Some substitutions are nearly as fit as the wild type, and dense labels encode that.</p>
+  <p>To check whether the fine-tuned embeddings actually captured protein properties, we trained a single-layer MLP regressor on a curated meltome dataset (53,363 train, 12,794 validation, 3,120 test sequences) to predict melting temperature as a stand-in for thermostability.</p>
+  <p>The headline metric got worse. <strong>Control ESM-2 reached an R² of 0.41. Our dense-label runs landed between 0.19 and 0.38</strong>, with the mid-weighted run at 0.28. On the metric we had set up to judge ourselves by, we had made the model worse.</p>
+  <p>But we had also built a second evaluation: generative sampling quality as a function of top-k, scored on structure and diversity together. There the picture inverted.</p>
+  <ul class="tight">
+    <li>At <strong>top-1</strong>, every model looks fine. All of them put a plausible protein at the argmax. The metric cannot separate anything.</li>
+    <li>At <strong>top-3</strong>, baseline ESM-2 collapsed to a pLDDT of <strong>48.10</strong>. The dense-label model held at <strong>78.72</strong>.</li>
+    <li>It did that while being <em>more</em> diverse, not less: Shannon entropy 0.46 against 0.35, k-mer diversity 0.45 against 0.28.</li>
+  </ul>
+  <p>So dense labels had not made the model worse. They had made its probability distribution better calibrated away from the peak. If you only ever take the top prediction, that is invisible. If you are using the model to explore candidate sequences, which is the actual job in protein design, it is the entire point.</p>
+
+  <blockquote class="pull">
+    <p>One number said the fine-tuning failed. A second number, measured at a sampling depth anyone would actually use, said it worked.</p>
+  </blockquote>
+
+  <h2>What I did</h2>
+  <p>My focus across these projects was the evaluation side and the ESM-2 fine-tuning: the structural metrics (pLDDT, pTM, pAE), the diversity metrics (Shannon entropy, edit distance, k-mer and Jaccard overlap), and running the fine-tuning sweep over label weighting and weight decay.</p>
+  <div class="callout">
+    <h3>On attribution</h3>
+    <p>These were course projects with nine authors and the papers do not include per-author contribution statements, so I want to be precise rather than generous with myself. The architecture work on ProtMistral-Tiny was not mine. The evaluation design and the fine-tuning runs are the parts I can speak to in depth, and the top-k finding came out of the evaluation suite rather than out of the model.</p>
+  </div>
+
+  <h2>What did not work</h2>
+  <p>Several things, and they are worth naming because the result above is easy to over-read.</p>
+  <ul class="tight">
+    <li><strong>We did not beat the large models.</strong> ProtGPT2 is well ahead on every structural metric. "Comparable to ProGen2-Small" is the real claim and the only one I make.</li>
+    <li><strong>The dense-label comparison is one control against one randomly selected fine-tuned run.</strong> No sweep with confidence intervals, no repeated seeds. I would not publish it as a finding. I would absolutely use it as a reason to look harder.</li>
+    <li><strong>The thermostability regression is a weak proxy.</strong> Melting temperature correlates with stability but a one-layer MLP on frozen embeddings is a blunt probe, and some of that R² gap may be probe capacity rather than embedding quality.</li>
+    <li><strong>Four papers in one semester is not a research program.</strong> One of the companion papers even carries an ICLR conference template header, which is the template's default text and not a publication. These are coursework and I describe them that way.</li>
+  </ul>
+
+  <h2>What I learned</h2>
+  <p>This is the project I bring up when someone asks what I think evaluation is for. A single headline metric is not a measurement, it is a choice about what you are willing to notice. The thermostability R² was a perfectly reasonable thing to track, and tracking only it would have led us to discard a method that was doing exactly what we built it to do.</p>
+  <p>The habit I kept: when I set up a metric, I try to write the second metric that could embarrass it, and I try to evaluate at the operating point the thing will actually be used at rather than the one that is cheapest to compute.</p>
+  <p>That transfers directly out of protein models. A care-gap model that scores well on AUC and only ever gets evaluated at its argmax has the same blind spot. So does a deployment measured on go-live date rather than on whether anyone was still using it in week six.</p>
+
+  <h2>What I would do next</h2>
+  <ul class="tight">
+    <li><strong>Run the sweep properly.</strong> Multiple seeds, confidence intervals, and the full label-weight grid against the top-k curve rather than one representative run.</li>
+    <li><strong>Test whether the calibration gain survives a harder probe.</strong> If a stronger regressor closes the thermostability gap, the tradeoff was partly an artifact of probe capacity, which would change the conclusion.</li>
+    <li><strong>Check the Markov hypothesis directly.</strong> We inferred stepwise generation from the entropy and edit-distance pattern. Measuring the model's effective context length would test it rather than reasoning backwards from diversity metrics.</li>
+    <li><strong>Scale the tiny model until it breaks.</strong> 15,000 parameters was a constraint we picked, not a discovered optimum. The curve between 15k and 151M is where the actual finding is.</li>
+  </ul>
+
+  <h2>Skills</h2>
+  <ul class="tags">
+    <li>PyTorch</li><li>HuggingFace</li><li>Transformer Fine-Tuning</li><li>Evaluation Design</li><li>AlphaFold Metrics</li><li>Information-Theoretic Diversity Metrics</li><li>GPU Budget Management</li><li>Scientific Writing</li>
+  </ul>
+
+  <div class="sourcenote">
+    <strong>Sources:</strong> "ProtMistral-Tiny: Ultra-Compact Protein Language Modeling" and "Dense Distribution Labeling via DMS for Protein MLM," Duke BME590, Spring 2025, plus two companion papers on intrinsically disordered region prediction. These are course deliverables, not published conference papers. PDFs available on request while I confirm sharing with the lab.
+  </div>
+
+  <nav class="pagenav" aria-label="More case studies">
+    <a href="mirna-diagnostic.html">&#8592; Previous: breast cancer diagnostic</a>
+    <a href="cauti-coating.html">Next: catheter coating &#8594;</a>
+  </nav>
+</main>
+</body>
+</html>

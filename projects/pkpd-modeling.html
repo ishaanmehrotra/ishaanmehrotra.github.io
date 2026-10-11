@@ -1,0 +1,143 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Two diabetes drugs, simulated and then priced — Ishaan Mehrotra</title>
+<meta name="description" content="Extending the Bergman minimal model with ADME compartments to compare insulin lispro against liraglutide in type 2 diabetes, then placing the cost of each treatment next to the simulated result.">
+<meta name="theme-color" content="#0A1A45">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Two diabetes drugs, simulated and then priced — Ishaan Mehrotra">
+<meta property="og:description" content="Extending the Bergman minimal model with ADME compartments to compare insulin lispro against liraglutide in type 2 diabetes, then placing the cost of each treatment next to the simulated result.">
+<meta property="og:image" content="../assets/img/card-pkpd.jpg">
+<meta name="twitter:card" content="summary_large_image">
+<link rel="icon" href="../assets/favicon.svg">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Inter:wght@400;450;500;600;650&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../assets/style.css">
+</head>
+<body class="article">
+<a class="skip" href="#main">Skip to content</a>
+
+<header class="nav">
+  <div class="nav__brand"><a href="../index.html">Ishaan Mehrotra</a></div>
+  <nav aria-label="Sections">
+    <ul class="nav__links">
+      <li><a href="../index.html#about">About</a></li>
+      <li><a href="../index.html#experience">Experience</a></li>
+      <li><a href="../index.html#work">Work</a></li>
+      <li><a href="../index.html#skills">Skills</a></li>
+      <li><a href="../index.html#contact">Contact</a></li>
+    </ul>
+  </nav>
+  <a class="nav__cta" href="../resume/ishaan-mehrotra-resume.pdf">Resume</a>
+</header>
+
+<main id="main" class="page">
+  <p class="crumb"><a href="../index.html">Home</a> <span aria-hidden="true">/</span> <a href="../index.html#work">Featured work</a> <span aria-hidden="true">/</span> Pharmacokinetic modeling</p>
+
+  <p class="eyebrow">06 · Modeling · Pharmacoeconomics</p>
+  <h1>Two diabetes drugs, simulated and then priced</h1>
+  <p class="lede">We added the compartments a standard glucose-insulin model was missing, simulated insulin lispro against the GLP-1 agonist liraglutide, and put the monthly cost of each drug next to the curve it produces.</p>
+
+  <dl class="glance">
+    <div><dt>Timeline</dt><dd>Fall 2023</dd></div>
+    <div><dt>Context</dt><dd>BME260 Modeling Cellular &amp; Molecular Systems, Duke</dd></div>
+    <div><dt>Team</dt><dd>5 students</dd></div>
+    <div><dt>My role</dt><dd>One of five. The deck does not break out individual contributions</dd></div>
+    <div><dt>Tools</dt><dd>Python, extended Bergman minimal model, ADME compartments, Hill kinetics, parametric sensitivity analysis</dd></div>
+    <div class="wide"><dt>Headline outcome</dt><dd>Liraglutide returned glucose to baseline in 1 hour against lispro's 2 and 5 untreated, with a 28% peak reduction against lispro's 17%. It also costs roughly 37× more at list.</dd></div>
+  </dl>
+
+  <h2>The problem</h2>
+  <p>Type 2 diabetes has two very different pharmacological answers. Insulin analogs like lispro replace the hormone directly. GLP-1 receptor agonists like liraglutide work further upstream, amplifying the body's own insulin response to food and slowing gastric emptying. Both lower blood glucose. They do it on different timescales, through different mechanisms, at wildly different prices.</p>
+  <p>We wanted a comparison more informative than "both lower glucose," which meant building a model detailed enough that the difference in the <em>shape</em> of the response would show up rather than just the endpoints.</p>
+
+  <h2>Why it is hard</h2>
+  <p>The Bergman minimal model is the standard starting point for glucose-insulin dynamics, and it is minimal by design: glucose, insulin, insulin action. That is genuinely not enough to tell these two drugs apart, because the entire mechanism of a GLP-1 agonist lives in compartments the minimal model does not have. Run both drugs through Bergman and you get two curves that differ mostly in how you parameterized them, which tells you about your assumptions rather than about the drugs.</p>
+  <p>The second difficulty is that the honest answer involves money, and pharmacokinetic models do not have a price term. A model that stops at "liraglutide produces a better curve" has answered a question nobody is actually deciding.</p>
+
+  <h2>What we built</h2>
+  <p>We extended the Bergman model with compartments for glucagon and for GLP-1, added absorption, distribution, metabolism and excretion compartments so the two drugs' different routes and timescales would be represented honestly, and used Hill kinetics for the saturating hormone interactions rather than linear terms. We simulated healthy and diabetic physiology separately, then layered each drug on top, with glucose infusions timed to represent meals across a 24-hour day.</p>
+
+  <figure class="wide">
+    <img src="../assets/img/pkpd-sims.jpg" alt="Four simulation panels: glucose infusion pulses over 24 hours, drug infusion profiles for lispro and liraglutide, glucose concentration curves for all three conditions, and active insulin curves." loading="lazy">
+    <figcaption>The simulated day. Meals drive glucose spikes; the three conditions (no treatment, lispro, liraglutide) separate clearly in both peak height and recovery time.</figcaption>
+  </figure>
+
+  <h2>Results</h2>
+
+  <figure>
+    <img src="../assets/img/pkpd-results.jpg" alt="Comparative results: time to return to baseline, percentage reduction in peak glucose, and lowest glucose concentration for liraglutide, lispro and no treatment." loading="lazy">
+    <figcaption>The comparison the extra compartments made possible.</figcaption>
+  </figure>
+
+  <ul class="tight">
+    <li><strong>Time for glucose to return to baseline after a peak:</strong> liraglutide 1 hour, lispro 2 hours, no treatment 5 hours.</li>
+    <li><strong>Reduction in peak glucose against no treatment:</strong> liraglutide 28%, lispro 17%.</li>
+    <li><strong>Lowest glucose reached:</strong> liraglutide 2.5 mmol/L, lispro 3 mmol/L, no treatment 6 mmol/L.</li>
+  </ul>
+
+  <p>Liraglutide wins on every simulated axis. We ran a parametric sweep across glucose effectiveness and insulin sensitivity to understand why, and that produced the more interesting finding: GLP-1 agonists appear to enhance insulin sensitivity, while exogenous insulin can drive insulin resistance over time. Those point in opposite directions, which is a real argument for combination therapy rather than a straight choice.</p>
+
+  <figure>
+    <img src="../assets/img/pkpd-param.jpg" alt="Three-dimensional surface plot showing maximum glucose concentration as a function of fractional glucose effectiveness and fractional insulin sensitivity." loading="lazy">
+    <figcaption>Parametric sweep over glucose effectiveness and insulin sensitivity. The combination-therapy argument comes from this surface, not from the single-drug comparison.</figcaption>
+  </figure>
+
+  <p>We also proposed an extension the course did not ask for: a weight term, dW/dt = α(CI − BMR(W) − EE(PA)), coupling caloric intake, basal metabolic rate as a function of body weight, and energy expenditure from activity. A GLP-1 agonist's appetite suppression feeds back into insulin sensitivity through body weight, so modeling the drug without modeling weight misses a loop that matters over months.</p>
+
+  <h2>The part most modeling projects skip</h2>
+
+  <figure>
+    <img src="../assets/img/pkpd-cost.jpg" alt="Cost and ethics slide: lispro about $25 per vial with a $35 per month value program, liraglutide about $1300 for a 30-day supply with roughly 80% coverable by insurance, plus ethical considerations." loading="lazy">
+    <figcaption>Lispro runs about $25 a vial, with a manufacturer program capping it near $35 a month. Liraglutide as Saxenda runs about $1,300 for a 30-day supply, around 80% coverable by insurance.</figcaption>
+  </figure>
+
+  <p>A roughly 37-fold list price difference for a drug that returns glucose to baseline one hour sooner. That is not a modeling conclusion, it is a coverage and access conclusion, and it changes what the simulation is telling you. "Liraglutide is better" is true and nearly useless on its own. "Liraglutide is better and costs 37 times more at list, with insurance covering most of it for people who have insurance" is a sentence a formulary committee can act on.</p>
+  <p>We put the ethical considerations next to it rather than in an appendix: perception of obesity treatment, GLP-1 side effects, the information gap patients face, and cost as an access barrier.</p>
+
+  <h2>What did not work</h2>
+  <p>The limitations in the deck are ours, written before anyone asked, and I still think they are the right ones.</p>
+  <ul class="tight">
+    <li><strong>The model cannot examine either drug the way a patient experiences it.</strong> Real treatment involves lifestyle management, and these drugs are usually taken alongside others, for example lispro with a longer-acting insulin analog. We modeled monotherapy because that is what the model could represent.</li>
+    <li><strong>It covers a short window.</strong> Nothing in it speaks to long-term effects or side effects, which is where most of the real clinical difference between these two drug classes lives.</li>
+    <li><strong>There is no variability in it.</strong> No sleep, no difference between nutrients producing the same glucose load, no between-patient spread. Every curve is a curve for an average patient who does not exist.</li>
+    <li><strong>The weight-loss function was proposed, not validated.</strong> We wrote the equation and did not fit it to data.</li>
+  </ul>
+  <p>That third one is the real gap. The clinically interesting question is not where the mean goes, it is how wide the distribution is, because that is what determines whether a treatment is safe for the tail.</p>
+
+  <h2>What I learned</h2>
+  <p>A model is a tool for producing an argument, and the argument is not finished until it includes what the answer costs. I have used that framing continuously since, most directly in population health work where the question is never "does this intervention work" but "does it work well enough to be worth the clinician minute it consumes."</p>
+  <p>The companion project that term applied the same approach to naltrexone for alcohol use disorder, comparing a daily oral pill against a monthly injection on receptor occupancy and on what a missed dose does to each. Same lesson, different drug: adherence is a model parameter, not a footnote.</p>
+
+  <h2>What I would do next</h2>
+  <ul class="tight">
+    <li><strong>Add between-patient variability and report a distribution.</strong> Sample insulin sensitivity and glucose effectiveness across a plausible population and report the 10th percentile alongside the mean. The tail is the clinically interesting part, especially given liraglutide's lower glucose floor.</li>
+    <li><strong>Model combination therapy.</strong> The parametric sweep already argues for it and the model has the compartments. Simulating lispro plus a GLP-1 agonist is the obvious next run and we never did it.</li>
+    <li><strong>Fit the weight function to published trial data</strong> rather than leaving it as a proposed form.</li>
+    <li><strong>Use net cost, not list.</strong> List price is the wrong number for an access argument. Net of rebates and typical copay is harder to source and far more honest.</li>
+  </ul>
+
+  <h2>Skills</h2>
+  <ul class="tags">
+    <li>Compartmental Modeling</li><li>Differential Equations</li><li>Hill Kinetics</li><li>Python Simulation</li><li>Parametric Sensitivity Analysis</li><li>Pharmacoeconomics</li><li>Limitation Analysis</li>
+  </ul>
+
+  <div class="btnrow">
+    <a class="btn btn--solid" href="../docs/pkpd-lispro-liraglutide.pdf">Lispro vs liraglutide (PDF)</a>
+    <a class="btn" href="../docs/pkpd-naltrexone.pdf">Naltrexone companion project (PDF)</a>
+  </div>
+
+  <div class="sourcenote">
+    <strong>Source:</strong> "Lispro &amp; Liraglutide: Insulin Analogs vs. GLP-1RAs as Treatments for Type II Diabetes," Duke BME260, Fall 2023. All figures and numbers are from that deck.
+  </div>
+
+  <nav class="pagenav" aria-label="More case studies">
+    <a href="handheld-device.html">&#8592; Previous: handheld device</a>
+    <a href="../index.html#work">All featured work &#8594;</a>
+  </nav>
+</main>
+</body>
+</html>
