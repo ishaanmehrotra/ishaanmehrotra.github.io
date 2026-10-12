@@ -188,7 +188,11 @@ a:hover { color: var(--link-hot); }
 .sec h2 + p { margin-top: var(--s3); color: var(--ink-2); max-width: 64ch; }
 
 /* ---------- hero ---------- */
-.hero { display: grid; grid-template-columns: 1.35fr .9fr; gap: var(--s7); align-items: center; }
+.hero { display: grid; grid-template-columns: 1.35fr .9fr; gap: var(--s7); align-items: start; }
+/* The intro runs long, so the portrait tracks down beside it rather than
+   floating in the middle of a tall column. Falls back to top-aligned
+   wherever position:sticky is unsupported. */
+
 .hero__eyebrow {
   font-family: var(--mono); font-size: 11px; letter-spacing: .12em;
   text-transform: uppercase; color: var(--gold-deep); margin: 0 0 var(--s3);
@@ -198,23 +202,14 @@ a:hover { color: var(--link-hot); }
   font-size: clamp(2.5rem, 5.4vw, 4rem); line-height: 1.0; letter-spacing: -.015em;
   margin: 0 0 var(--s3);
 }
-.hero__tag { font-size: clamp(1.08rem, 2vw, 1.3rem); line-height: 1.4; margin: 0 0 var(--s4); max-width: 34ch; }
+.hero__tag { font-size: clamp(1.08rem, 2vw, 1.22rem); line-height: 1.45; margin: 0 0 var(--s5); max-width: 48ch; color: var(--ink); }
 .hero p { color: var(--ink-2); margin: 0 0 var(--s4); max-width: 56ch; font-size: .97rem; }
-.hero__photo { border-radius: var(--r); overflow: hidden; border: 1px solid var(--border); background: var(--cream); }
+.hero__photo {
+  border-radius: var(--r); overflow: hidden; border: 1px solid var(--border); background: var(--cream);
+  position: sticky; top: 76px;
+}
 .hero__photo img { width: 100%; height: auto; display: block; }
 
-.stats {
-  display: grid; grid-template-columns: repeat(3, 1fr); gap: 0;
-  margin: var(--s5) 0 var(--s5); border: 1px solid var(--border);
-  border-radius: var(--r-s); overflow: hidden; background: #fff;
-}
-.stats > div { padding: var(--s3) var(--s4); box-shadow: inset -1px 0 0 0 var(--border); }
-.stats > div:last-child { box-shadow: none; }
-.stats b {
-  display: block; font-family: var(--display); font-weight: 400;
-  font-size: 1.7rem; line-height: 1.05; color: var(--navy-700);
-}
-.stats span { display: block; font-size: .83rem; color: var(--ink-2); margin-top: 3px; line-height: 1.4; }
 
 /* ---------- image bands ---------- */
 .band { position: relative; line-height: 0; margin: 0; max-width: none; background: var(--navy-800); }
@@ -553,7 +548,7 @@ ul.tight li, ol.tight li { margin: 0 0 .55em; }
   .hero { grid-template-columns: 1fr; gap: var(--s5); }
   /* Photo first on a phone, but short enough that the name and the one-line
      summary are still above the fold on a 667px screen. */
-  .hero__photo { max-width: 230px; order: -1; }
+  .hero__photo { max-width: 230px; order: -1; position: static; }
   .skills { grid-template-columns: 1fr; }
   .sec { padding: var(--s7) var(--s5); }
   .sheet { margin: 0; border-radius: 0; box-shadow: none; }
@@ -566,9 +561,6 @@ ul.tight li, ol.tight li { margin: 0 0 .55em; }
 }
 
 @media (max-width: 560px) {
-  .stats { grid-template-columns: 1fr; }
-  .stats > div { box-shadow: inset 0 -1px 0 0 var(--border); }
-  .stats > div:last-child { box-shadow: none; }
   .photos { grid-template-columns: 1fr; }
   .edu__seal { width: 96px; }
 }
