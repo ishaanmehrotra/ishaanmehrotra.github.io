@@ -1,0 +1,9 @@
+*.tmp
+.DS_Store
+DESIGN-AND-CHANGELOG.md
+MAINTENANCE.md
+PRIVATE-source-map.md
+REVIEW-BEFORE-PUBLISHING.md
+Thumbs.db
+_unused/
+resume/
