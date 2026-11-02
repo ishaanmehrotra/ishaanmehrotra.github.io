@@ -15,6 +15,36 @@
    so an anchored heading never lands underneath it.
    ============================================================ */
 
+/* ---------- 0. Fonts (self-hosted) ---------- */
+/* Newsreader for display, IBM Plex Sans for text, IBM Plex Mono for labels.
+   Served from assets/fonts/ rather than Google Fonts: one less third party,
+   no external request to fail on a locked-down corporate network, and the
+   page renders in the real typefaces even offline. Latin subset, woff2. */
+
+@font-face{font-family:"Newsreader";src:url("fonts/newsreader-400.woff2")format("woff2");
+  font-weight:400;font-style:normal;font-display:swap}
+@font-face{font-family:"Newsreader";src:url("fonts/newsreader-400-italic.woff2")format("woff2");
+  font-weight:400;font-style:italic;font-display:swap}
+
+@font-face{font-family:"IBM Plex Sans";src:url("fonts/ibm-plex-sans-400.woff2")format("woff2");
+  font-weight:400;font-style:normal;font-display:swap}
+@font-face{font-family:"IBM Plex Sans";src:url("fonts/ibm-plex-sans-400-italic.woff2")format("woff2");
+  font-weight:400;font-style:italic;font-display:swap}
+@font-face{font-family:"IBM Plex Sans";src:url("fonts/ibm-plex-sans-500.woff2")format("woff2");
+  font-weight:500;font-style:normal;font-display:swap}
+@font-face{font-family:"IBM Plex Sans";src:url("fonts/ibm-plex-sans-600.woff2")format("woff2");
+  font-weight:600;font-style:normal;font-display:swap}
+@font-face{font-family:"IBM Plex Sans";src:url("fonts/ibm-plex-sans-700.woff2")format("woff2");
+  font-weight:700;font-style:normal;font-display:swap}
+
+@font-face{font-family:"IBM Plex Mono";src:url("fonts/ibm-plex-mono-400.woff2")format("woff2");
+  font-weight:400;font-style:normal;font-display:swap}
+@font-face{font-family:"IBM Plex Mono";src:url("fonts/ibm-plex-mono-600.woff2")format("woff2");
+  font-weight:600;font-style:normal;font-display:swap}
+@font-face{font-family:"IBM Plex Mono";src:url("fonts/ibm-plex-mono-700.woff2")format("woff2");
+  font-weight:700;font-style:normal;font-display:swap}
+
+
 /* ---------- 1. Tokens ---------- */
 
 :root {
@@ -52,12 +82,11 @@
   --border-soft: #EAE3D9;
 
   /* type */
-  /* Instrument Serif and Inter come from Google Fonts as a progressive
-     enhancement. The fallbacks below are the design's verified baseline, so a
-     blocked CDN or an offline visitor still gets an intentional typeface. */
-  --display: "Instrument Serif", "Iowan Old Style", "Palatino Linotype", Georgia, "Times New Roman", serif;
-  --sans: "Inter", ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
-  --mono: ui-monospace, "SFMono-Regular", "Menlo", "Consolas", monospace;
+  /* Self-hosted above. The fallbacks still matter for the brief moment
+     before the woff2 lands, and for anyone blocking web fonts entirely. */
+  --display: "Newsreader", "Iowan Old Style", "Palatino Linotype", Georgia, "Times New Roman", serif;
+  --sans: "IBM Plex Sans", ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+  --mono: "IBM Plex Mono", ui-monospace, "SFMono-Regular", "Menlo", "Consolas", monospace;
 
   /* space */
   --s1: 4px;  --s2: 8px;  --s3: 12px; --s4: 16px;
