@@ -3,13 +3,13 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>A handheld device, built alone and tested against 22 specs — Ishaan Mehrotra</title>
+<title>A handheld device, built alone and tested against 22 specs | Ishaan Mehrotra</title>
 <meta name="description" content="Solo hardware project: requirements through schematic, PCB, CAD enclosure and firmware, then tested against all 22 written specifications with every pass and every failure published.">
-<meta name="theme-color" content="#0A1A45">
+<meta name="theme-color" content="#0B1D42">
 <meta property="og:type" content="article">
-<meta property="og:title" content="A handheld device, built alone and tested against 22 specs — Ishaan Mehrotra">
+<meta property="og:title" content="A handheld device, built alone and tested against 22 specs | Ishaan Mehrotra">
 <meta property="og:description" content="Solo hardware project: requirements through schematic, PCB, CAD enclosure and firmware, then tested against all 22 written specifications with every pass and every failure published.">
-<meta property="og:image" content="../assets/img/card-device.jpg">
+<meta property="og:image" content="../assets/img/device-exploded.jpg">
 <meta name="twitter:card" content="summary_large_image">
 <link rel="icon" href="../assets/favicon.svg">
 <link rel="preload" href="../assets/fonts/newsreader-400.woff2" as="font" type="font/woff2" crossorigin>
@@ -35,7 +35,7 @@
 <main id="main" class="page">
   <p class="crumb"><a href="../index.html">Home</a> <span aria-hidden="true">/</span> <a href="../index.html#work">Featured work</a> <span aria-hidden="true">/</span> Handheld device</p>
 
-  <p class="eyebrow">05 · Hardware · Solo build</p>
+  <p class="eyebrow">Hardware, built solo</p>
   <h1>A handheld device, built alone and tested against 22 specs</h1>
   <p class="lede">I did the requirements, schematic, PCB layout, enclosure, firmware and assembly myself, then tested the finished device against the 22 requirements I had written before building it. Six failed. They are all listed on this page.</p>
 
@@ -93,12 +93,12 @@
   <div class="callout">
     <h3>The six failures, with causes</h3>
     <ul class="tight">
-      <li><strong>Internal wire retention — FAILED.</strong> The wires connecting the push button and power switch to the board kept coming undone. Cause: the connection pins on the PCB were too short to hold them. Fix: longer pins.</li>
-      <li><strong>6-foot drop — FAILED.</strong> The board stayed safe and every component stayed in position, which is what the mounting design was for. But the cover separated from the base. The enclosure protected the electronics and failed to protect itself.</li>
-      <li><strong>Blink trigger — FAILED.</strong> Pressing the button did not reliably start the monostable output.</li>
-      <li><strong>Blink pattern — FAILED.</strong> The LED did not blink in the specified pattern on press.</li>
-      <li><strong>Frequency control, 5 to 10 Hz — FAILED.</strong> The astable potentiometer did not move the blink rate across the specified range.</li>
-      <li><strong>Duration control, 3 to 10 seconds — FAILED.</strong> Same on the monostable side.</li>
+      <li><strong>Internal wire retention: FAILED.</strong> The wires connecting the push button and power switch to the board kept coming undone. Cause: the connection pins on the PCB were too short to hold them. Fix: longer pins.</li>
+      <li><strong>6-foot drop: FAILED.</strong> The board stayed safe and every component stayed in position, which is what the mounting design was for. But the cover separated from the base. The enclosure protected the electronics and failed to protect itself.</li>
+      <li><strong>Blink trigger: FAILED.</strong> Pressing the button did not reliably start the monostable output.</li>
+      <li><strong>Blink pattern: FAILED.</strong> The LED did not blink in the specified pattern on press.</li>
+      <li><strong>Frequency control, 5 to 10 Hz: FAILED.</strong> The astable potentiometer did not move the blink rate across the specified range.</li>
+      <li><strong>Duration control, 3 to 10 seconds: FAILED.</strong> Same on the monostable side.</li>
     </ul>
   </div>
   <p>Four of six electronics requirements failed, so I went looking for why rather than stopping at the result. My written diagnosis names three candidates: a wiring error somewhere in the circuit connections despite the board itself functioning, the fact that my board carried only one LED instead of the two the design assumed, and probable component damage in the potentiometers, which had been reused from the previous semester and had been through a lot.</p>
